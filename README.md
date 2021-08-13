@@ -1,2 +1,2 @@
-# 1901EE65_2021
-cs384
+# tuts_2021
+CS384 Tuts Projects
