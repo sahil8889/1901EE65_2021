@@ -16,7 +16,7 @@ input_nums = [3, 4, 1, 6, 3, 3, 9, 0, 0, 0]
 mylist=[]
 count=0
 for i in range(len(input_nums)):
-        if(str(input_nums[i]).isdigit()):
+        if(str(input_nums[i]).isdigit() and input_nums[i]<10):
             continue
         else:
             count=1
