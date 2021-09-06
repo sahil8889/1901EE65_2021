@@ -2,7 +2,7 @@ import os
 
 
 def output_by_subject():
-    os.mkdir('output_by_subject')
+    #os.mkdir('output_by_subject')
     file = "regtable_old.csv"    
     with open(file, "r") as f:
         for line in f:
@@ -28,7 +28,7 @@ def output_by_subject():
         return
 
 def output_individual_roll():
-    os.mkdir('output_individual_roll')
+    #os.mkdir('output_individual_roll')
     file = "regtable_old.csv"
     with open(file, "r") as f:
         for line in f:
