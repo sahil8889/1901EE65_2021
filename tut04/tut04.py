@@ -1,60 +1,62 @@
 import os
+import csv
+import openpyxl
 
-def output_by_subject():
-    os.mkdir('output_by_subject')
-    file = "regtable_old.csv"    
-    with open(file, "r") as f:
-        for line in f:
-            column = line.split(',')
-            subno=column[3]
-            del column[4:8]
-            del column[2]
-            if (column[3] =="subno"):
-                continue
-            
-            path1 = 'output_by_subject/' + subno + '.xlsx'
-            try: 
-                from openpyxl import load_workbook
-                wb = load_workbook(path1)
-                sheet1 = wb.active
-                wb.save(path1)
+os.mkdir('output_by_subject')
+with open('regtable_old.csv', 'r') as csvfile:
+    p1 = []
+    csvreader = csv.DictReader(csvfile)
+    dict = {}
+    for column in csvreader:
+        l1 = []
+        l1.append(column['rollno'])
+        l1.append(column['register_sem'])
+        l1.append(column['subno'])
+        l1.append(column['sub_type'])
 
-            except IOError:
-                from openpyxl import Workbook
-                wb = Workbook()
-                sheet1 = wb.active
-                sheet1.append(['rollno','register_sem','subno','sub_type'])
-                sheet1.append(column)
-                wb.save(path1)
-        return
+        if(column['subno'] in p1):
+            dict[column['subno']].append(l1)
+        else:
+            p1.append(column['subno'])
+            dict[column['subno']] = [l1]
 
-def output_individual_roll():
-    os.mkdir('output_individual_roll')
-    file = "regtable_old.csv"
-    with open(file, "r") as f:
-        for line in f:
-            column = line.split(',')
-            rollno=column[0]
-            del column[4:8]
-            del column[2]
-            if (column[0] =="rollno"):  
-                continue
+for subno in dict:
+    path1 = 'output_by_subject/' + subno + '.xlsx'
 
-            path2 = 'output_individual_roll/' + rollno + '.xlsx'
-            try: 
-                from openpyxl import load_workbook
-                wb = load_workbook(path2)
-                sheet1 = wb.active
-                sheet1.append(column)
-                wb.save(path2)
-            except IOError:
-                from openpyxl import Workbook
-                wb = Workbook()
-                sheet1 = wb.active
-                sheet1.append(['rollno','register_sem','subno','sub_type'])
-                sheet1.append(column)
-                wb.save(path2)
-        return
+    wb = openpyxl.Workbook()
+    sheet = wb.active
+    header = ['rollno', 'register_sem', 'subno', 'sub_type']
+    sheet.append(header)
 
-output_by_subject()
-output_individual_roll()
+    for column in dict[subno]:
+        sheet.append(column)
+    wb.save(path1)
+
+os.mkdir('output_individual_roll')
+with open('regtable_old.csv', 'r') as csvfile:
+    p2 = []
+    csvreader = csv.DictReader(csvfile)
+    dict = {}
+    for column in csvreader:
+        l2 = []
+        l2.append(column['rollno'])
+        l2.append(column['register_sem'])
+        l2.append(column['subno'])
+        l2.append(column['sub_type'])
+
+        if(column['rollno'] in p2):
+            dict[column['rollno']].append(l2)
+        else:
+            p2.append(column['rollno'])
+            dict[column['rollno']] = [l2]
+
+for rollno in dict:
+    path2 = 'output_individual_roll/' + rollno + '.xlsx'
+    wb = openpyxl.Workbook()
+    sheet = wb.active
+    header = ['rollno', 'register_sem', 'subno', 'sub_type']
+    sheet.append(header)
+
+    for column in dict[rollno]:
+        sheet.append(column)
+    wb.save(path2)
